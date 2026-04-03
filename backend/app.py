@@ -26,6 +26,8 @@ MAPPINGS = {
 model = None
 feature_cols = []
 actual_accuracy = 0.85
+actual_cm = None
+actual_report = None
 
 try:
     with open(MODEL_FILE, 'rb') as f:
@@ -37,6 +39,8 @@ try:
         with open(METADATA_FILE, 'r') as f:
             meta = json.load(f)
             actual_accuracy = meta.get('accuracy', actual_accuracy)
+            actual_cm = meta.get('confusion_matrix', None)
+            actual_report = meta.get('classification_report', None)
             if 'feature_names' in meta:
                feature_cols = meta['feature_names']
 except Exception:
@@ -44,7 +48,7 @@ except Exception:
 
 @app.route('/')
 def home():
-    return "🚀 Backend Running!"
+    return " Backend Running!"
 
 @app.route('/predict', methods=['POST'])
 def predict():
@@ -83,10 +87,25 @@ def model_info():
         
         sorted_fi = dict(sorted(importances.items(), key=lambda item: item[1], reverse=True))
         
+        # Dynamically load latest metadata so no restart is required
+        current_cm = actual_cm
+        current_accuracy = actual_accuracy
+        current_report = actual_report
+        
+        if os.path.exists(METADATA_FILE):
+            with open(METADATA_FILE, 'r') as f:
+                meta = json.load(f)
+                current_accuracy = meta.get('accuracy', actual_accuracy)
+                current_cm = meta.get('confusion_matrix', actual_cm)
+                current_report = meta.get('classification_report', actual_report)
+        
         return jsonify({
-            "accuracy": round(actual_accuracy * 100, 2),
-            "feature_importance": sorted_fi
+            "accuracy": round(current_accuracy * 100, 2),
+            "feature_importance": sorted_fi,
+            "confusion_matrix": current_cm,
+            "classification_report": current_report
         })
+
     except Exception as e:
         return jsonify({"error": str(e)}), 400
 

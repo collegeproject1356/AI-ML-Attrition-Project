@@ -29,6 +29,24 @@ export default function DataViewer({ theme }) {
   const attritionCount = data.filter(d => d.Attrition === 'Yes').length;
   const attritionRate = totalEmployees > 0 ? ((attritionCount / totalEmployees) * 100).toFixed(1) : 0;
 
+  const exportToCSV = () => {
+    if (data.length === 0) return;
+    const csvRows = [];
+    csvRows.push(headers.join(','));
+    for (const row of data) {
+      const values = headers.map(header => row[header]);
+      csvRows.push(values.join(','));
+    }
+    const csvString = csvRows.join('\n');
+    const blob = new Blob([csvString], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'employee_attrition_data.csv';
+    a.click();
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500">
       
@@ -42,6 +60,10 @@ export default function DataViewer({ theme }) {
             Explore the raw structured data used by Grp17 AI to train the prediction models. Filter and analyze patterns directly.
           </p>
         </div>
+        <button onClick={exportToCSV} className="flex items-center gap-2 px-6 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-semibold rounded-xl transition-all shadow-lg shadow-indigo-500/30">
+          <Download size={20} />
+          Export CSV
+        </button>
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

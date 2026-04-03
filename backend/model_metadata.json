@@ -7,5 +7,16 @@
         "YearsAtCompany",
         "DistanceFromHome",
         "OverTime"
-    ]
+    ],
+    "confusion_matrix": {
+        "tn": 812,
+        "fp": 41,
+        "fn": 42,
+        "tp": 105
+    },
+    "classification_report": {
+        "precision": 0.7191780821917808,
+        "recall": 0.7142857142857143,
+        "f1_score": 0.7167235494880546
+    }
 }

@@ -1,4 +1,4 @@
-import { Activity, Database, GitMerge, LayoutDashboard, Menu, X, Settings, Moon, Sun, Monitor } from 'lucide-react';
+import { Activity, Database, GitMerge, LayoutDashboard, Menu, X, Settings, Moon, Sun, Monitor, Grid } from 'lucide-react';
 import { useState } from 'react';
 
 export default function Navbar({ activeTab, setActiveTab, theme, setTheme }) {
@@ -9,6 +9,7 @@ export default function Navbar({ activeTab, setActiveTab, theme, setTheme }) {
     { id: 'predict', label: 'Predict', icon: <Activity size={18} /> },
     { id: 'data', label: 'Dataset', icon: <Database size={18} /> },
     { id: 'model', label: 'Model Info', icon: <LayoutDashboard size={18} /> },
+    { id: 'confusion_matrix', label: 'Confusion Matrix', icon: <Grid size={18} /> },
     { id: 'tree', label: 'Tree Vis', icon: <GitMerge size={18} /> },
   ];
 

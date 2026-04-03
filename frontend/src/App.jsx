@@ -4,6 +4,7 @@ import PredictionForm from './components/PredictionForm';
 import ModelDetails from './components/ModelDetails';
 import DataViewer from './components/DataViewer';
 import TreeVisualizer from './components/TreeVisualizer';
+import ConfusionMatrixTab from './components/ConfusionMatrixTab';
 
 export default function App() {
   const [activeTab, setActiveTab] = useState('predict');
@@ -14,7 +15,7 @@ export default function App() {
     const root = document.documentElement;
     root.classList.remove('light', 'dark', 'oled');
     root.classList.add(theme);
-    if (theme === 'oled') root.classList.add('dark'); // OLED uses dark text colors
+    if (theme === 'oled') root.classList.add('dark'); 
   }, [theme]);
 
   // Theme background classes
@@ -33,6 +34,7 @@ export default function App() {
           {activeTab === 'predict' && <PredictionForm theme={theme} />}
           {activeTab === 'data' && <DataViewer theme={theme} />}
           {activeTab === 'model' && <ModelDetails theme={theme} />}
+          {activeTab === 'confusion_matrix' && <ConfusionMatrixTab theme={theme} />}
           {activeTab === 'tree' && <TreeVisualizer theme={theme} />}
         </div>
       </main>

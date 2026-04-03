@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { ChevronRight, Loader2, ShieldAlert, ShieldCheck, Zap } from 'lucide-react';
+import { motion } from 'framer-motion';
+import { ChevronRight, Loader2, ShieldAlert, ShieldCheck, Zap, Lightbulb } from 'lucide-react';
 import { API_BASE_URL } from '../config'; 
 
 export default function PredictionForm({ theme }) {
@@ -24,6 +25,19 @@ export default function PredictionForm({ theme }) {
     setLoading(false);
   };
 
+  const getActionableInsights = () => {
+    if (!result || result.prediction === 'No') return null;
+    const insights = [];
+    if (formData.OverTime === 'Yes') insights.push("Employee is working Overtime. Consider redistributing workload to prevent burnout.");
+    if (Number(formData.MonthlyIncome) < 5000) insights.push("Monthly income is relatively low. Review compensation against market averages focusing on retention.");
+    if (Number(formData.DistanceFromHome) > 15) insights.push("Commute distance is high. Explore hybrid/remote work options or travel allowances.");
+    if (Number(formData.YearsAtCompany) > 4 && Number(formData.MonthlyIncome) < 6000) insights.push("Tenured employee might feel undercompensated. Schedule a performance review.");
+    if (insights.length === 0) insights.push("Monitor engagement and schedule a preemptive 1-on-1 check-in to discuss career goals.");
+    return insights;
+  };
+
+  const insights = getActionableInsights();
+
   const handleChange = (e) => setFormData({ ...formData, [e.target.name]: e.target.value });
 
   return (
@@ -41,12 +55,17 @@ export default function PredictionForm({ theme }) {
         </div>
 
         {result && (
-          <div className={`p-6 rounded-2xl border backdrop-blur-sm transition-all animate-in zoom-in-95 duration-300 shadow-lg ${
+          <motion.div 
+            initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5 }}
+            className={`p-6 rounded-2xl border backdrop-blur-sm shadow-lg ${
             result.prediction === 'Yes' 
               ? (isDark ? 'bg-red-500/10 border-red-500/20 shadow-red-500/10' : 'bg-red-50 border-red-200 shadow-red-100') 
               : (isDark ? 'bg-green-500/10 border-green-500/20 shadow-green-500/10' : 'bg-green-50 border-green-200 shadow-green-100')
           }`}>
-            <h3 className={`text-lg font-semibold mb-3 flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Prediction Result</h3>
+            <div className="flex justify-between items-center mb-3">
+              <h3 className={`text-lg font-semibold flex items-center gap-2 ${isDark ? 'text-slate-200' : 'text-slate-800'}`}>Prediction Result</h3>
+            </div>
+            
             <div className="flex items-end gap-4">
               <span className={`text-4xl font-black flex items-center gap-2 ${result.prediction === 'Yes' ? 'text-red-500' : 'text-green-500'}`}>
                 {result.prediction === 'Yes' ? <ShieldAlert size={36}/> : <ShieldCheck size={36}/>}
@@ -57,7 +76,22 @@ export default function PredictionForm({ theme }) {
             <div className={`w-full rounded-full h-3 mt-5 overflow-hidden ${isDark ? 'bg-slate-800' : 'bg-slate-200'}`}>
               <div className={`h-full transition-all duration-1000 ease-out ${result.prediction === 'Yes' ? 'bg-gradient-to-r from-red-500 to-orange-500' : 'bg-gradient-to-r from-green-500 to-emerald-400'}`} style={{ width: `${result.probability}%` }}></div>
             </div>
-          </div>
+
+            {result.prediction === 'Yes' && insights && insights.length > 0 && (
+              <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.3 }} className="mt-6 pt-6 border-t border-red-500/20">
+                <h4 className={`text-sm font-bold flex items-center gap-2 mb-3 ${isDark ? 'text-red-400' : 'text-red-600'}`}>
+                  <Lightbulb size={18} /> Actionable HR Insights
+                </h4>
+                <ul className="space-y-2">
+                  {insights.map((insight, idx) => (
+                    <li key={idx} className={`text-sm flex items-start ${isDark ? 'text-slate-300' : 'text-slate-700'}`}>
+                      <span className="mr-2 mt-1">•</span> {insight}
+                    </li>
+                  ))}
+                </ul>
+              </motion.div>
+            )}
+          </motion.div>
         )}
 
         {!result && (
