@@ -1,5 +1,5 @@
 {
-    "accuracy": 0.917,
+    "accuracy": 0.846,
     "feature_names": [
         "Age",
         "MonthlyIncome",
@@ -9,14 +9,14 @@
         "OverTime"
     ],
     "confusion_matrix": {
-        "tn": 812,
-        "fp": 41,
-        "fn": 42,
-        "tp": 105
+        "tn": 754,
+        "fp": 99,
+        "fn": 55,
+        "tp": 92
     },
     "classification_report": {
-        "precision": 0.7191780821917808,
-        "recall": 0.7142857142857143,
-        "f1_score": 0.7167235494880546
+        "precision": 0.4816753926701571,
+        "recall": 0.6258503401360545,
+        "f1_score": 0.5443786982248521
     }
 }

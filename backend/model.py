@@ -39,8 +39,8 @@ def train_system():
 
         model = DecisionTreeClassifier(
             criterion='entropy',
-            max_depth=5,
-            min_samples_leaf=5,
+            max_depth=3,
+            min_samples_leaf=15,
             class_weight='balanced',
             random_state=42
         )
